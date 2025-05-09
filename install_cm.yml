@@ -1,0 +1,22 @@
+---
+- hosts: cloudera_manager
+  become: yes
+  tasks:
+    - name: Download Cloudera Manager repo
+      get_url:
+        url: https://username:password@archive.cloudera.com/p/cm7/7.13.1.0/redhat8/yum/cloudera-manager.repo
+        dest: /etc/yum.repos.d/cloudera-manager.repo
+
+    - name: Install Cloudera Manager packages
+      yum:
+        name:
+          - cloudera-manager-server
+          - cloudera-manager-agent
+        state: present
+
+    - name: Start Cloudera Manager Server
+      service:
+        name: cloudera-scm-server
+        state: started
+        enabled: yes
+

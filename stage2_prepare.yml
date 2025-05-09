@@ -1,0 +1,15 @@
+- name: Stage 2 - Use Python 3.9 for real automation
+  hosts: cloudera_nodes
+  gather_facts: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.9
+  tasks:
+    - name: Confirm Python interpreter
+      debug:
+        msg: "Using Python: {{ ansible_python_interpreter }}"
+
+    - name: Example - install Java
+      dnf:
+        name: java-11-openjdk
+        state: present
+

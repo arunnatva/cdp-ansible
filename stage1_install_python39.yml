@@ -1,0 +1,19 @@
+- name: Stage 1 - Bootstrap Python 3.9 on all Cloudera nodes
+  hosts: all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/libexec/platform-python
+  tasks:
+    - name: Ensure Python 3.9 is installed
+      dnf:
+        name: python39
+        state: present
+
+    - name: Confirm Python 3.9 is installed
+      command: /usr/bin/python3.9 --version
+      register: python39_version
+
+    - name: Print installed Python version
+      debug:
+        var: python39_version.stdout
+

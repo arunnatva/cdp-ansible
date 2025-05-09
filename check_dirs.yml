@@ -1,0 +1,31 @@
+- name: Check for directory presence on master and worker nodes
+  hosts: all
+  gather_facts: no
+  vars:
+    master_dirs:
+      - /data/nn
+      - /data/jn
+    worker_dirs:
+      - /data/dn
+
+  tasks:
+    - name: Determine node role
+      set_fact:
+        node_role: "{{ 'master' if inventory_hostname in groups['masters'] else 'worker' }}"
+
+    - name: Set target directories based on role
+      set_fact:
+        target_dirs: "{{ master_dirs if node_role == 'master' else worker_dirs }}"
+
+    - name: Check for required directories
+      stat:
+        path: "{{ item }}"
+      loop: "{{ target_dirs }}"
+      register: dir_check_results
+
+    - name: Fail if any required directory is missing
+      fail:
+        msg: "Missing required directory: {{ item.item }}"
+      when: not item.stat.exists
+      loop: "{{ dir_check_results.results }}"
+

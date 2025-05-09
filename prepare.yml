@@ -1,0 +1,41 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ hostname }}"
+
+    - name: Install base packages
+      yum:
+        name:
+          - wget
+          - curl
+          - vim
+          - chrony
+          - nscd
+          - iproute
+          - python38
+          - python3-libsemanage
+          - selinux-policy
+        state: present
+
+    - name: Ensure chronyd is running
+      service:
+        name: chronyd
+        state: started
+        enabled: true
+
+
+    - name: Set SELinux to permissive with 'targeted' policy
+      ansible.posix.selinux:
+        state: permissive
+        policy: targeted
+
+
+    - name: Disable firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: no
+

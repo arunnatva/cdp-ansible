@@ -1,0 +1,29 @@
+---
+- name: Check disk space thresholds
+  hosts: all
+  gather_facts: no
+  vars:
+    thresholds:
+      /home: 25
+      /var: 100
+      /var/log: 200
+
+  tasks:
+    - name: Get available disk space for each path
+      shell: "df -BG --output=avail {{ item.key }} | tail -1 | tr -dc '0-9'"
+      register: disk_check
+      changed_when: false
+      loop: "{{ thresholds | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+
+    - name: Fail if disk space is below threshold
+      fail:
+        msg: >
+          WARNING: Available space on {{ item.item.key }} is {{ item.stdout }} GB,
+          which is below the required {{ item.item.value }} GB.
+      when: (item.stdout | int) < (item.item.value | int)
+      loop: "{{ disk_check.results }}"
+      loop_control:
+        label: "{{ item.item.key }}"
+

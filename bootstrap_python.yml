@@ -1,0 +1,7 @@
+- name: Bootstrap Python on Cloudera Nodes
+  hosts: all
+  gather_facts: no  # Don't try to collect facts (requires Python)
+  tasks:
+    - name: Install python3 using raw module
+      raw: sudo dnf install -y python39
+

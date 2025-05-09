@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Copy Cloudera Manager repo from CM host
+      get_url:
+        url: https://archive.cloudera.com/cm7/7.11.3/redhat7/yum/cloudera-manager.repo
+        dest: /etc/yum.repos.d/cloudera-manager.repo
+
+    - name: Install Cloudera Agent
+      yum:
+        name: cloudera-manager-agent
+        state: present
+
+    - name: Configure Cloudera Agent
+      lineinfile:
+        path: /etc/cloudera-scm-agent/config.ini
+        regexp: '^server_host='
+        line: "server_host=cm1"
+
+    - name: Start Cloudera Agent
+      service:
+        name: cloudera-scm-agent
+        state: started
+        enabled: yes
+

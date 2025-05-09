@@ -1,0 +1,12 @@
+---
+- name: Disable Transparent Huge Pages (THP)
+  hosts: all
+  become: yes
+  tasks:
+    - name: Disable THP enabled
+      shell: "echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled"
+      become: yes
+
+    - name: Disable THP defrag
+      shell: "echo never | sudo tee /sys/kernel/mm/transparent_hugepage/defrag"
+      become: yes

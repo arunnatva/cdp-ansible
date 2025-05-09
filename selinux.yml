@@ -1,0 +1,17 @@
+- name: Ensure SELinux is permissive if not already
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Get current SELinux status
+      command: getenforce
+      register: selinux_status
+      changed_when: false
+
+    - name: Set SELinux to permissive if it's not already
+      ansible.posix.selinux:
+        state: permissive
+        policy: targeted
+      when: selinux_status.stdout != "Permissive"
+

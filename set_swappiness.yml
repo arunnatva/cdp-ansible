@@ -1,0 +1,16 @@
+---
+- name: Set vm.swappiness to 1
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create sysctl config for Cloudera swappiness
+      ansible.builtin.copy:
+        dest: /etc/sysctl.d/90-cloudera-swappiness.conf
+        content: "vm.swappiness=1\n"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload sysctl settings
+      ansible.builtin.command: sysctl --system
+
