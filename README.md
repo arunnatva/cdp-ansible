@@ -19,8 +19,10 @@ This is being developed and the README will keep evolving as I make progress.
 
 The steps to use this repo to deploy CDP cluster.
 
-1. Create a bunch of VMs or physical nodes that run linux OS, such as RHEL or Ubuntu etc., This repo is created for RHEL hosts
-2. chose one of the hosts as ansible controller
-3. setup passwordless SSH for root user from this controller to all other hosts. Ideally, dont use the controller node as part of CDP cluster
-4. update the inventory.yml with the hostnames
+- Create a bunch of VMs or physical nodes that run linux OS, such as RHEL or Ubuntu etc., This repo is created for RHEL hosts
+- chose one of the hosts as ansible controller
+- install ansible on the controller node
+- install the right/appropriate version of python on all the hosts, that is compatible with ansible version
+- setup passwordless SSH for root user from this controller to all other hosts. Ideally, dont use the controller node as part of CDP cluster
+-  update the inventory.yml with the hostnames
 
